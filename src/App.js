@@ -8,6 +8,30 @@ function App() {
   const [breakLength, setBreakLength] = useState(300000);
   const [takeBreak, setTakeBreak] = useState(false);
 
+  let content;
+
+  if (takeBreak) {
+    content = <h5>On Break</h5>;
+  } else {
+    content = <h5>In Session</h5>;
+  }
+
+  if (time === 0) {
+    setTakeBreak(true);
+    setTime(breakLength);
+  }
+
+  if (time === 0 && takeBreak) {
+    setTakeBreak(false);
+    setTime(sessionLength);
+  }
+
+  function resetToDefault() {
+    setTime(1500000);
+    setSessionLength(1500000);
+    setBreakLength(300000);
+  }
+
   function incrementSessionLength() {
     if (sessionLength >= 3540000) {
       return sessionLength === 3540000;
@@ -42,16 +66,6 @@ function App() {
     }
   }
 
-  if (time === 0) {
-    setTakeBreak(true);
-    setTime(breakLength);
-  }
-
-  if (time === 0 && takeBreak) {
-    setTakeBreak(false);
-    setTime(sessionLength);
-  }
-
   useEffect(() => {
     let interval;
     if (running) {
@@ -67,6 +81,7 @@ function App() {
   return (
     <div className='App'>
       <div className='remote'>
+        {content}
         <div className='clock'>
           <span>{('0' + (Math.floor(time / 60000) % 60)).slice(-2)}:</span>
           <span>{('0' + (Math.floor(time / 1000) % 60)).slice(-2)}</span>
@@ -74,7 +89,7 @@ function App() {
         <div className='start-pause-reset'>
           <button onClick={() => setRunning(true)}>Start</button>
           <button onClick={() => setRunning(false)}>Pause</button>
-          <button onClick={() => setTime(60000)}>Reset</button>
+          <button onClick={resetToDefault}>Reset</button>
         </div>
 
         <div className='break-session'>
