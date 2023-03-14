@@ -2,8 +2,48 @@ import './App.css';
 import { useState, useEffect } from 'react';
 
 function App() {
-  const [time, setTime] = useState(60000);
+  const [sessionLength, setSessionLength] = useState(1500000);
+  const [time, setTime] = useState(sessionLength);
   const [running, setRunning] = useState(false);
+  const [breakLength, setBreakLength] = useState(300000);
+
+  function incrementSessionLength() {
+    if (sessionLength >= 3540000) {
+      return sessionLength === 3540000;
+    } else {
+      setSessionLength(sessionLength + 60000);
+      setTime(time + 60000);
+    }
+  }
+
+  function decrementSessionLength() {
+    if (sessionLength <= 60000) {
+      return;
+    } else {
+      setSessionLength(sessionLength - 60000);
+      setTime(time - 60000);
+    }
+  }
+
+  function decrementBreakLength() {
+    if (breakLength <= 60000) {
+      return;
+    } else {
+      setBreakLength(breakLength - 60000);
+    }
+  }
+
+  function incrementBreakLength() {
+    if (breakLength >= 3540000) {
+      return breakLength === 3540000;
+    } else {
+      setBreakLength(breakLength + 60000);
+    }
+  }
+
+  if (time === 0) {
+    setTime(breakLength);
+  }
 
   useEffect(() => {
     let interval;
@@ -21,12 +61,60 @@ function App() {
     <div className='App'>
       <div className='remote'>
         <div className='clock'>
-          <span>{('0' + Math.floor((time / 60000) % 60)).slice(-2)}:</span>
-          <span>{('0' + Math.floor((time / 1000) % 60)).slice(-2)}</span>
+          <span>{('0' + (Math.floor(time / 60000) % 60)).slice(-2)}:</span>
+          <span>{('0' + (Math.floor(time / 1000) % 60)).slice(-2)}</span>
         </div>
-        <button onClick={() => setRunning(true)}>Start</button>
-        <button onClick={() => setRunning(false)}>Stop</button>
-        <button onClick={() => setTime(1190000)}>Reset</button>
+        <div className='start-pause-reset'>
+          <button onClick={() => setRunning(true)}>Start</button>
+          <button onClick={() => setRunning(false)}>Pause</button>
+          <button onClick={() => setTime(60000)}>Reset</button>
+        </div>
+
+        <div className='break-session'>
+          <div>
+            <h3>Break</h3>
+            <button
+              onClick={incrementBreakLength}
+              className='break-session-buttons'
+            >
+              +
+            </button>
+            <span>
+              {('0' + (Math.floor(breakLength / 60000) % 60)).slice(-2)}:
+            </span>
+            <span>
+              {('0' + (Math.floor(breakLength / 1000) % 60)).slice(-2)}
+            </span>
+
+            <button
+              onClick={decrementBreakLength}
+              className='break-session-buttons'
+            >
+              -
+            </button>
+          </div>
+          <div>
+            <h3>Session</h3>
+            <button
+              onClick={incrementSessionLength}
+              className='break-session-buttons'
+            >
+              +
+            </button>
+            <span>
+              {('0' + (Math.floor(sessionLength / 60000) % 60)).slice(-2)}:
+            </span>
+            <span>
+              {('0' + (Math.floor(sessionLength / 1000) % 60)).slice(-2)}
+            </span>
+            <button
+              onClick={decrementSessionLength}
+              className='break-session-buttons'
+            >
+              -
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
