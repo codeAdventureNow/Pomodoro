@@ -3,9 +3,10 @@ import { useState, useEffect } from 'react';
 
 function App() {
   const [sessionLength, setSessionLength] = useState(1500000);
-  const [time, setTime] = useState(sessionLength);
+  const [time, setTime] = useState(1500000);
   const [running, setRunning] = useState(false);
   const [breakLength, setBreakLength] = useState(300000);
+  const [takeBreak, setTakeBreak] = useState(false);
 
   function incrementSessionLength() {
     if (sessionLength >= 3540000) {
@@ -42,7 +43,13 @@ function App() {
   }
 
   if (time === 0) {
+    setTakeBreak(true);
     setTime(breakLength);
+  }
+
+  if (time === 0 && takeBreak) {
+    setTakeBreak(false);
+    setTime(sessionLength);
   }
 
   useEffect(() => {
