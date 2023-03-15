@@ -1,3 +1,4 @@
+import sound from './assets/Whistle.m4a';
 import './App.css';
 import { useState, useEffect } from 'react';
 
@@ -8,20 +9,18 @@ function App() {
   const [breakLength, setBreakLength] = useState(300000);
   const [takeBreak, setTakeBreak] = useState(false);
 
-  let content;
-
-  if (takeBreak) {
-    content = <h5>On Break</h5>;
-  } else {
-    content = <h5>In Session</h5>;
+  function play() {
+    new Audio(sound).play();
   }
 
   if (time === 0) {
+    play();
     setTakeBreak(true);
     setTime(breakLength);
   }
 
   if (time === 0 && takeBreak) {
+    play();
     setTakeBreak(false);
     setTime(sessionLength);
   }
@@ -80,21 +79,50 @@ function App() {
 
   return (
     <div className='App'>
-      <div className='remote'>
-        {content}
+      <div
+        className='remote'
+        style={{
+          backgroundColor: takeBreak ? '#96DED1' : '#ecffdc',
+        }}
+      >
+        {takeBreak ? <h5>On Break</h5> : <h5>In Session</h5>}
         <div className='clock'>
           <span>{('0' + (Math.floor(time / 60000) % 60)).slice(-2)}:</span>
           <span>{('0' + (Math.floor(time / 1000) % 60)).slice(-2)}</span>
         </div>
         <div className='start-pause-reset'>
-          <button onClick={() => setRunning(true)}>Start</button>
-          <button onClick={() => setRunning(false)}>Pause</button>
-          <button onClick={resetToDefault}>Reset</button>
+          <button
+            style={{
+              backgroundColor: takeBreak ? '#ecffdc' : '#96DED1',
+            }}
+            className='middleButtons'
+            onClick={() => setRunning(true)}
+          >
+            Start
+          </button>
+          <button
+            style={{
+              backgroundColor: takeBreak ? '#ecffdc' : '#96DED1',
+            }}
+            className='middleButtons'
+            onClick={() => setRunning(false)}
+          >
+            Pause
+          </button>
+          <button
+            style={{
+              backgroundColor: takeBreak ? '#ecffdc' : '#96DED1',
+            }}
+            className='middleButtons'
+            onClick={resetToDefault}
+          >
+            Reset
+          </button>
         </div>
 
         <div className='break-session'>
           <div>
-            <h3>Break</h3>
+            <h4>Break</h4>
             <button
               onClick={incrementBreakLength}
               className='break-session-buttons'
@@ -116,7 +144,7 @@ function App() {
             </button>
           </div>
           <div>
-            <h3>Session</h3>
+            <h4>Session</h4>
             <button
               onClick={incrementSessionLength}
               className='break-session-buttons'
@@ -135,6 +163,7 @@ function App() {
             >
               -
             </button>
+            {/* <button onClick={play}>Sound</button> */}
           </div>
         </div>
       </div>

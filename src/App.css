@@ -2,16 +2,17 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
+  align-items: center;
+  height: 100vmin;
+  margin-top: 50px;
 }
 
 .remote {
-  margin: 20px;
   width: 12rem;
   height: 30rem;
   border-radius: 20px;
-  border: 2px solid black;
-  position: relative;
   padding: 1rem;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .clock {
@@ -21,10 +22,11 @@
   align-items: center;
   width: 90%;
   height: 10rem;
-  border: 2px solid black;
+  border: 1px solid #efe0bb;
   border-radius: 50%;
   margin: 50px auto;
   position: relative;
+  background-color: #fffffd;
 }
 
 .countDownNumber {
@@ -47,4 +49,27 @@
 
 .break-session-buttons {
   margin: 1px;
+  border-radius: 50%;
+  background-color: #f2ead6;
+}
+
+/* .background-green {
+  background-color: #ecffdc;
+}
+
+.background-blue {
+  background-color: #96ded1;
+} */
+
+.middleButtons {
+  /* background-color: #96ded1; */
+  border-radius: 10px;
+  margin: 2px;
+  outline: none;
+}
+
+@media only screen and (max-width: 600px) {
+  .App {
+    margin-top: 140px;
+  }
 }
