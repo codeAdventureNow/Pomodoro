@@ -1,6 +1,6 @@
 .App {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vmin;
@@ -11,17 +11,19 @@
   height: 30rem;
   border-radius: 20px;
   padding: 1rem;
+  margin-top: 20px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .clock {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 90%;
   height: 10rem;
-  border: 1px solid #efe0bb;
+
+  border: 1px solid #cd2527;
   border-radius: 50%;
   margin: 50px auto;
   position: relative;
@@ -32,13 +34,19 @@
   font-size: 40px;
 }
 
-.start-pause-reset {
+.startPauseReset {
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
 
-.break-session {
+.startPauseResetButtons {
+  border-radius: 10px;
+  margin: 2px;
+  border: 1px solid #7393b3;
+}
+
+.breakSession {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -46,25 +54,15 @@
   gap: 14px;
 }
 
-.break-session-buttons {
+.breakSessionButtons {
   margin: 1px;
   border-radius: 50%;
   background-color: #f2ead6;
+  border: 1px solid #7393b3;
 }
 
-/* .background-green {
-  background-color: #ecffdc;
-}
-
-.background-blue {
-  background-color: #96ded1;
-} */
-
-.middleButtons {
-  /* background-color: #96ded1; */
-  border-radius: 10px;
-  margin: 2px;
-  outline: none;
+.pomodoroHeadline {
+  color: #cd2527;
 }
 
 @media only screen and (max-width: 600px) {

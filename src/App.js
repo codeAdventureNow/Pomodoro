@@ -3,134 +3,140 @@ import './App.css';
 import { useState, useEffect } from 'react';
 
 function App() {
-  const [sessionLength, setSessionLength] = useState(1500000);
-  const [time, setTime] = useState(1500000);
-  const [running, setRunning] = useState(false);
-  const [breakLength, setBreakLength] = useState(300000);
-  const [takeBreak, setTakeBreak] = useState(false);
+  const minute = 60000;
+  const [time, setTime] = useState(minute * 25);
+  const [timeStart, setTimeStart] = useState(false);
+  const [sessionLength, setSessionLength] = useState(minute * 25);
+  const [breakLength, setBreakLength] = useState(minute * 5);
+  const [onBreak, setOnBreak] = useState(false);
 
-  function play() {
+  function playAudioAlert() {
     new Audio(sound).play();
   }
 
   if (time === 0) {
-    play();
-    setTakeBreak(true);
+    playAudioAlert();
+    setOnBreak(true);
     setTime(breakLength);
   }
 
-  if (time === 0 && takeBreak) {
-    play();
-    setTakeBreak(false);
+  if (time === 0 && onBreak) {
+    playAudioAlert();
+    setOnBreak(false);
     setTime(sessionLength);
   }
 
   function resetToDefault() {
-    setTime(1500000);
-    setSessionLength(1500000);
-    setBreakLength(300000);
+    setTime(minute * 25);
+    setSessionLength(minute * 25);
+    setBreakLength(minute * 5);
   }
 
   function incrementSessionLength() {
-    if (sessionLength >= 3540000) {
-      return sessionLength === 3540000;
+    if (sessionLength >= minute * 59) {
+      return;
     } else {
-      setSessionLength(sessionLength + 60000);
-      setTime(time + 60000);
+      setSessionLength(sessionLength + minute);
+      setTime(time + minute);
     }
   }
 
   function decrementSessionLength() {
-    if (sessionLength <= 60000) {
+    if (sessionLength <= minute) {
       return;
     } else {
-      setSessionLength(sessionLength - 60000);
-      setTime(time - 60000);
+      setSessionLength(sessionLength - minute);
+      setTime(time - minute);
     }
   }
 
   function decrementBreakLength() {
-    if (breakLength <= 60000) {
+    if (breakLength <= minute) {
       return;
     } else {
-      setBreakLength(breakLength - 60000);
+      setBreakLength(breakLength - minute);
     }
   }
 
   function incrementBreakLength() {
-    if (breakLength >= 3540000) {
-      return breakLength === 3540000;
+    if (breakLength >= minute * 59) {
+      return breakLength === minute * 59;
     } else {
-      setBreakLength(breakLength + 60000);
+      setBreakLength(breakLength + minute);
     }
   }
 
   useEffect(() => {
     let interval;
-    if (running) {
+    if (timeStart) {
       interval = setInterval(() => {
         setTime((prevTime) => prevTime - 10);
       }, 10);
-    } else if (!running) {
+    } else if (!timeStart) {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [running]);
+  }, [timeStart]);
 
   return (
     <div className='App'>
+      <h2>
+        <span className='pomodoroHeadline'>Pomodoro </span>Timer
+      </h2>
       <div
         className='remote'
         style={{
-          backgroundColor: takeBreak ? '#96DED1' : '#ecffdc',
+          backgroundColor: onBreak ? '#96DED1' : '#ecffdc',
         }}
       >
-        {takeBreak ? <h5>On Break</h5> : <h5>In Session</h5>}
+        {' '}
         <div className='clock'>
-          <span>{('0' + (Math.floor(time / 60000) % 60)).slice(-2)}:</span>
-          <span>{('0' + (Math.floor(time / 1000) % 60)).slice(-2)}</span>
+          {onBreak ? <p>On Break</p> : <p>In Session</p>}
+          <div className='timeCounter'>
+            <span>{('0' + (Math.floor(time / minute) % 60)).slice(-2)}:</span>
+            <span>{('0' + (Math.floor(time / 1000) % 60)).slice(-2)}</span>
+          </div>
         </div>
-        <div className='start-pause-reset'>
+        <div className='startPauseReset'>
           <button
             style={{
-              backgroundColor: takeBreak ? '#ecffdc' : '#96DED1',
+              backgroundColor: onBreak ? '#ecffdc' : '#96DED1',
             }}
-            className='middleButtons'
-            onClick={() => setRunning(true)}
+            className='startPauseResetButtons'
+            onClick={() => setTimeStart(true)}
           >
             Start
           </button>
           <button
             style={{
-              backgroundColor: takeBreak ? '#ecffdc' : '#96DED1',
+              backgroundColor: onBreak ? '#ecffdc' : '#96DED1',
             }}
-            className='middleButtons'
-            onClick={() => setRunning(false)}
+            className='startPauseResetButtons'
+            onClick={() => setTimeStart(false)}
           >
             Pause
           </button>
           <button
             style={{
-              backgroundColor: takeBreak ? '#ecffdc' : '#96DED1',
+              backgroundColor: onBreak ? '#ecffdc' : '#96DED1',
             }}
-            className='middleButtons'
+            className='startPauseResetButtons'
             onClick={resetToDefault}
           >
             Reset
           </button>
         </div>
-
-        <div className='break-session'>
+        <div className='breakSession'>
           <div>
             <h4>Break</h4>
             <button
               onClick={incrementBreakLength}
-              className='break-session-buttons'
+              className='breakSessionButtons'
             >
               +
             </button>
             <span>
-              {('0' + (Math.floor(breakLength / 60000) % 60)).slice(-2)}:
+              {('0' + (Math.floor(breakLength / minute) % 60)).slice(-2)}:
             </span>
             <span>
               {('0' + (Math.floor(breakLength / 1000) % 60)).slice(-2)}
@@ -138,7 +144,7 @@ function App() {
 
             <button
               onClick={decrementBreakLength}
-              className='break-session-buttons'
+              className='breakSessionButtons'
             >
               -
             </button>
@@ -147,23 +153,22 @@ function App() {
             <h4>Session</h4>
             <button
               onClick={incrementSessionLength}
-              className='break-session-buttons'
+              className='breakSessionButtons'
             >
               +
             </button>
             <span>
-              {('0' + (Math.floor(sessionLength / 60000) % 60)).slice(-2)}:
+              {('0' + (Math.floor(sessionLength / minute) % 60)).slice(-2)}:
             </span>
             <span>
               {('0' + (Math.floor(sessionLength / 1000) % 60)).slice(-2)}
             </span>
             <button
               onClick={decrementSessionLength}
-              className='break-session-buttons'
+              className='breakSessionButtons'
             >
               -
             </button>
-            {/* <button onClick={play}>Sound</button> */}
           </div>
         </div>
       </div>
