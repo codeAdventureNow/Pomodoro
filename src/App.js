@@ -99,28 +99,28 @@ function App() {
         </div>
         <div className='startPauseReset'>
           <button
+            className='startPauseResetButtons'
             style={{
               backgroundColor: onBreak ? 'var(--primary)' : 'var(--secondary)',
             }}
-            className='startPauseResetButtons'
             onClick={() => setTimeStart(true)}
           >
             Start
           </button>
           <button
+            className='startPauseResetButtons'
             style={{
               backgroundColor: onBreak ? 'var(--primary)' : 'var(--secondary)',
             }}
-            className='startPauseResetButtons'
             onClick={() => setTimeStart(false)}
           >
             Pause
           </button>
           <button
+            className='startPauseResetButtons'
             style={{
               backgroundColor: onBreak ? 'var(--primary)' : 'var(--secondary)',
             }}
-            className='startPauseResetButtons'
             onClick={resetToDefault}
           >
             Reset
@@ -130,8 +130,8 @@ function App() {
           <div>
             <h4>Break</h4>
             <button
-              onClick={incrementBreakLength}
               className='breakSessionButtons'
+              onClick={incrementBreakLength}
             >
               +
             </button>
@@ -143,8 +143,8 @@ function App() {
             </span>
 
             <button
-              onClick={decrementBreakLength}
               className='breakSessionButtons'
+              onClick={decrementBreakLength}
             >
               -
             </button>
@@ -152,8 +152,8 @@ function App() {
           <div>
             <h4>Session</h4>
             <button
-              onClick={incrementSessionLength}
               className='breakSessionButtons'
+              onClick={incrementSessionLength}
             >
               +
             </button>
@@ -164,8 +164,8 @@ function App() {
               {('0' + (Math.floor(sessionLength / 1000) % 60)).slice(-2)}
             </span>
             <button
-              onClick={decrementSessionLength}
               className='breakSessionButtons'
+              onClick={decrementSessionLength}
             >
               -
             </button>
