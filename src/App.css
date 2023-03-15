@@ -1,3 +1,13 @@
+:root {
+  --primary: #ecffdc;
+  --secondary: #96ded1;
+  --splash: #cd2527;
+  --buttonOutline: #7393b3;
+  --breakSessionButtons: #f2ead6;
+  --clockFace: #fffffd;
+  --background: #f8f8f8;
+}
+
 .App {
   display: flex;
   flex-direction: column;
@@ -22,12 +32,11 @@
   align-items: center;
   width: 90%;
   height: 10rem;
-
-  border: 1px solid #cd2527;
+  border: 1px solid var(--splash);
   border-radius: 50%;
   margin: 50px auto;
   position: relative;
-  background-color: #fffffd;
+  background-color: var(--clockFace);
 }
 
 .countDownNumber {
@@ -43,7 +52,7 @@
 .startPauseResetButtons {
   border-radius: 10px;
   margin: 2px;
-  border: 1px solid #7393b3;
+  border: 1px solid var(--buttonOutline);
 }
 
 .breakSession {
@@ -57,12 +66,12 @@
 .breakSessionButtons {
   margin: 1px;
   border-radius: 50%;
-  background-color: #f2ead6;
-  border: 1px solid #7393b3;
+  background-color: var(--breakSessionButtons);
+  border: 1px solid var(--buttonOutline);
 }
 
 .pomodoroHeadline {
-  color: #cd2527;
+  color: var(--splash);
 }
 
 @media only screen and (max-width: 600px) {

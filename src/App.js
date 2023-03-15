@@ -86,7 +86,7 @@ function App() {
       <div
         className='remote'
         style={{
-          backgroundColor: onBreak ? '#96DED1' : '#ecffdc',
+          backgroundColor: onBreak ? 'var(--secondary)' : 'var(--primary)',
         }}
       >
         {' '}
@@ -100,7 +100,7 @@ function App() {
         <div className='startPauseReset'>
           <button
             style={{
-              backgroundColor: onBreak ? '#ecffdc' : '#96DED1',
+              backgroundColor: onBreak ? 'var(--primary)' : 'var(--secondary)',
             }}
             className='startPauseResetButtons'
             onClick={() => setTimeStart(true)}
@@ -109,7 +109,7 @@ function App() {
           </button>
           <button
             style={{
-              backgroundColor: onBreak ? '#ecffdc' : '#96DED1',
+              backgroundColor: onBreak ? 'var(--primary)' : 'var(--secondary)',
             }}
             className='startPauseResetButtons'
             onClick={() => setTimeStart(false)}
@@ -118,7 +118,7 @@ function App() {
           </button>
           <button
             style={{
-              backgroundColor: onBreak ? '#ecffdc' : '#96DED1',
+              backgroundColor: onBreak ? 'var(--primary)' : 'var(--secondary)',
             }}
             className='startPauseResetButtons'
             onClick={resetToDefault}
