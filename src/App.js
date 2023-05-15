@@ -25,6 +25,7 @@ function App() {
   if (time === 0 && onBreak) {
     playAudioAlert();
     setOnBreak(false);
+    setTally(tally);
     setTime(sessionLength);
   }
 
