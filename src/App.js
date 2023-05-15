@@ -165,6 +165,7 @@ function App() {
     }
   }
 
+  //TODO How do I work with useEffect in conjunction with a reducer?
   useEffect(() => {
     let interval;
     if (state.timeStart) {
