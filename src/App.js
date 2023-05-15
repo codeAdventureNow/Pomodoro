@@ -9,6 +9,7 @@ function App() {
   const [sessionLength, setSessionLength] = useState(minute * 25);
   const [breakLength, setBreakLength] = useState(minute * 5);
   const [onBreak, setOnBreak] = useState(false);
+  const [tally, setTally] = useState(0);
 
   function playAudioAlert() {
     new Audio(sound).play();
@@ -17,6 +18,7 @@ function App() {
   if (time === 0) {
     playAudioAlert();
     setOnBreak(true);
+    setTally(tally + 1);
     setTime(breakLength);
   }
 
@@ -96,6 +98,10 @@ function App() {
             <span>{('0' + (Math.floor(time / minute) % 60)).slice(-2)}:</span>
             <span>{('0' + (Math.floor(time / 1000) % 60)).slice(-2)}</span>
           </div>
+        </div>
+        <h4 className='tally-heading'>Tally</h4>
+        <div className='tally'>
+          <p>{tally}</p>
         </div>
         <div className='startPauseReset'>
           <button
