@@ -203,8 +203,8 @@ function App() {
             </span>
           </div>
         </div>
-        <h4 className='state.tally-heading'>Tally</h4>
-        <div className='state.tally'>
+        <h4 className='tally-heading'>Tally</h4>
+        <div className='tally'>
           <p>{state.tally}</p>
         </div>
         <div className='startPauseReset'>
