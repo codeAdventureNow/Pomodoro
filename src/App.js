@@ -10,6 +10,7 @@ const DECREMENT_SESSION_LENGTH = 'decrement_session_length';
 const TIME_START_TOGGLE = 'time_start_toggle';
 const DECREMENT_BREAK_LENGTH = 'decrement_break_length';
 const INCREMENT_BREAK_LENGTH = 'increment_break_length';
+const DECREMENT_TIME = 'decrement_time';
 
 const minute = 60000;
 
@@ -48,11 +49,13 @@ function reducer(state, action) {
         sessionLength: state.sessionLength - minute,
         time: state.time - minute,
       };
-    case TIME_START_TOGGLE:
+    case TIME_START_TOGGLE: {
       return {
         ...state,
         timeStart: action.payload,
       };
+    }
+
     case DECREMENT_BREAK_LENGTH:
       return {
         ...state,
@@ -63,14 +66,18 @@ function reducer(state, action) {
         ...state,
         breakLength: state.breakLength + minute,
       };
-
+    case DECREMENT_TIME:
+      return {
+        ...state,
+        time: action.payload,
+      };
     default:
       return state;
   }
 }
 
 function App() {
-  // const [state.time, setTime] = useState(minute * 25);
+  // const [time, setTime] = useState(minute * 25);
   // const [timeStart, setTimeStart] = useState(false);
   // const [sessionLength, setSessionLength] = useState(minute * 25);
   // const [breakLength, setBreakLength] = useState(minute * 5);
@@ -170,13 +177,17 @@ function App() {
     let interval;
     if (state.timeStart) {
       interval = setInterval(() => {
+        // dispatch({
+        //   type: DECREMENT_TIME,
+        //   payload: state.time - 10,
+        // });
         // setTime((prevTime) => prevTime - 10);
       }, 10);
     } else if (!state.timeStart) {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [state.timeStart]);
+  }, [state.timeStart, state.time]);
 
   return (
     <div className='App'>
