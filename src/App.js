@@ -27,7 +27,6 @@ function reducer(state, action) {
       return {
         ...state,
         onBreak: false,
-        tally: state.tally,
         time: state.sessionLength,
       };
     case RESET_SESSION_AND_BREAK:
@@ -86,11 +85,11 @@ function App() {
 
   const [state, dispatch] = useReducer(reducer, {
     // time: minute * 25,
-    time: 3000,
+    time: 10000,
     timeStart: false,
     sessionLength: minute * 25,
     // breakLength: minute * 5,
-    breakLength: 3000,
+    breakLength: 10000,
     onBreak: false,
     tally: 0,
   });
