@@ -1,85 +1,172 @@
 import sound from './assets/Whistle.m4a';
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useReducer, useEffect } from 'react';
+
+const SET_BREAK = 'set_break';
+const START_NEW_SESSION = 'start_new_session';
+const RESET_SESSION_AND_BREAK = 'reset_session_and_break';
+const INCREMENT_SESSION_LENGTH = 'increment_session_length';
+const DECREMENT_SESSION_LENGTH = 'decrement_session_length';
+const TIME_START_TOGGLE = 'time_start_toggle';
+const DECREMENT_BREAK_LENGTH = 'decrement_break_length';
+const INCREMENT_BREAK_LENGTH = 'increment_break_length';
+const DECREMENT_TIME = 'decrement_time';
+
+const minute = 60000;
+
+function reducer(state, action) {
+  switch (action.type) {
+    case SET_BREAK:
+      return {
+        ...state,
+        onBreak: true,
+        sessionTally: state.sessionTally + 1,
+        time: state.breakLength,
+      };
+    case START_NEW_SESSION:
+      return {
+        ...state,
+        onBreak: false,
+        sessionTally: state.sessionTally - 1,
+        time: state.sessionLength,
+      };
+    case RESET_SESSION_AND_BREAK:
+      return {
+        ...state,
+        time: minute * 25,
+        sessionLength: minute * 25,
+        breakLength: minute * 5,
+      };
+    case INCREMENT_SESSION_LENGTH:
+      return {
+        ...state,
+        sessionLength: state.sessionLength + minute,
+        time: state.time + minute,
+      };
+    case DECREMENT_SESSION_LENGTH:
+      return {
+        ...state,
+        sessionLength: state.sessionLength - minute,
+        time: state.time - minute,
+      };
+    case TIME_START_TOGGLE: {
+      return {
+        ...state,
+        timeStart: action.payload,
+      };
+    }
+
+    case DECREMENT_BREAK_LENGTH:
+      return {
+        ...state,
+        breakLength: state.breakLength - minute,
+      };
+    case INCREMENT_BREAK_LENGTH:
+      return {
+        ...state,
+        breakLength: state.breakLength + minute,
+      };
+    case DECREMENT_TIME:
+      return {
+        ...state,
+        time: state.time - 1000,
+      };
+    default:
+      return state;
+  }
+}
 
 function App() {
-  const minute = 60000;
-  const [time, setTime] = useState(minute * 25);
-  const [timeStart, setTimeStart] = useState(false);
-  const [sessionLength, setSessionLength] = useState(minute * 25);
-  const [breakLength, setBreakLength] = useState(minute * 5);
-  const [onBreak, setOnBreak] = useState(false);
-  const [tally, setTally] = useState(0);
+  const [state, dispatch] = useReducer(reducer, {
+    time: minute * 25,
+    timeStart: false,
+    sessionLength: minute * 25,
+    breakLength: minute * 5,
+    onBreak: false,
+    sessionTally: 0,
+  });
 
   function playAudioAlert() {
     new Audio(sound).play();
   }
 
-  if (time === 0) {
-    playAudioAlert();
-    setOnBreak(true);
-    setTally(tally + 1);
-    setTime(breakLength);
-  }
+  useEffect(() => {
+    if (state.time === 0) {
+      playAudioAlert();
+      dispatch({
+        type: SET_BREAK,
+      });
+    }
+  }, [state.time]);
 
-  if (time === 0 && onBreak) {
-    playAudioAlert();
-    setOnBreak(false);
-    setTally(tally);
-    setTime(sessionLength);
-  }
+  useEffect(() => {
+    if (state.time === 0 && state.onBreak) {
+      playAudioAlert();
+      dispatch({
+        type: START_NEW_SESSION,
+      });
+    }
+  }, [state.time, state.onBreak]);
 
   function resetToDefault() {
-    setTime(minute * 25);
-    setSessionLength(minute * 25);
-    setBreakLength(minute * 5);
+    dispatch({
+      type: RESET_SESSION_AND_BREAK,
+    });
   }
 
   function incrementSessionLength() {
-    if (sessionLength >= minute * 59) {
+    if (state.sessionLength >= minute * 59) {
       return;
     } else {
-      setSessionLength(sessionLength + minute);
-      setTime(time + minute);
+      dispatch({
+        type: INCREMENT_SESSION_LENGTH,
+      });
     }
   }
 
   function decrementSessionLength() {
-    if (sessionLength <= minute) {
+    if (state.sessionLength <= minute) {
       return;
     } else {
-      setSessionLength(sessionLength - minute);
-      setTime(time - minute);
+      dispatch({
+        type: DECREMENT_SESSION_LENGTH,
+      });
     }
   }
 
   function decrementBreakLength() {
-    if (breakLength <= minute) {
+    if (state.breakLength <= minute) {
       return;
     } else {
-      setBreakLength(breakLength - minute);
+      dispatch({
+        type: DECREMENT_BREAK_LENGTH,
+      });
     }
   }
 
   function incrementBreakLength() {
-    if (breakLength >= minute * 59) {
-      return breakLength === minute * 59;
+    if (state.breakLength >= minute * 59) {
+      return state.breakLength === minute * 59;
     } else {
-      setBreakLength(breakLength + minute);
+      dispatch({
+        type: INCREMENT_BREAK_LENGTH,
+      });
     }
   }
 
   useEffect(() => {
     let interval;
-    if (timeStart) {
+    if (state.timeStart) {
       interval = setInterval(() => {
-        setTime((prevTime) => prevTime - 10);
-      }, 10);
-    } else if (!timeStart) {
+        dispatch({
+          type: DECREMENT_TIME,
+        });
+      }, 1000);
+    } else if (!state.timeStart) {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [timeStart]);
+  }, [state.timeStart, state.time]);
 
   return (
     <div className='App'>
@@ -89,44 +176,66 @@ function App() {
       <div
         className='remote'
         style={{
-          backgroundColor: onBreak ? 'var(--secondary)' : 'var(--primary)',
+          backgroundColor: state.onBreak
+            ? 'var(--secondary)'
+            : 'var(--primary)',
         }}
       >
         {' '}
         <div className='clock'>
-          {onBreak ? <p>On Break</p> : <p>In Session</p>}
+          {state.onBreak ? <p>On Break</p> : <p>In Session</p>}
           <div className='timeCounter'>
-            <span>{('0' + (Math.floor(time / minute) % 60)).slice(-2)}:</span>
-            <span>{('0' + (Math.floor(time / 1000) % 60)).slice(-2)}</span>
+            <span>
+              {('0' + (Math.floor(state.time / minute) % 60)).slice(-2)}:
+            </span>
+            <span>
+              {('0' + (Math.floor(state.time / 1000) % 60)).slice(-2)}
+            </span>
           </div>
         </div>
         <h4 className='tally-heading'>Tally</h4>
         <div className='tally'>
-          <p>{tally}</p>
+          <p>{state.sessionTally}</p>
         </div>
         <div className='startPauseReset'>
           <button
             className='startPauseResetButtons'
             style={{
-              backgroundColor: onBreak ? 'var(--primary)' : 'var(--secondary)',
+              backgroundColor: state.onBreak
+                ? 'var(--primary)'
+                : 'var(--secondary)',
             }}
-            onClick={() => setTimeStart(true)}
+            onClick={() =>
+              dispatch({
+                type: TIME_START_TOGGLE,
+                payload: true,
+              })
+            }
           >
             Start
           </button>
           <button
             className='startPauseResetButtons'
             style={{
-              backgroundColor: onBreak ? 'var(--primary)' : 'var(--secondary)',
+              backgroundColor: state.onBreak
+                ? 'var(--primary)'
+                : 'var(--secondary)',
             }}
-            onClick={() => setTimeStart(false)}
+            onClick={() =>
+              dispatch({
+                type: TIME_START_TOGGLE,
+                payload: false,
+              })
+            }
           >
             Pause
           </button>
           <button
             className='startPauseResetButtons'
             style={{
-              backgroundColor: onBreak ? 'var(--primary)' : 'var(--secondary)',
+              backgroundColor: state.onBreak
+                ? 'var(--primary)'
+                : 'var(--secondary)',
             }}
             onClick={resetToDefault}
           >
@@ -143,10 +252,10 @@ function App() {
               +
             </button>
             <span>
-              {('0' + (Math.floor(breakLength / minute) % 60)).slice(-2)}:
+              {('0' + (Math.floor(state.breakLength / minute) % 60)).slice(-2)}:
             </span>
             <span>
-              {('0' + (Math.floor(breakLength / 1000) % 60)).slice(-2)}
+              {('0' + (Math.floor(state.breakLength / 1000) % 60)).slice(-2)}
             </span>
 
             <button
@@ -165,10 +274,13 @@ function App() {
               +
             </button>
             <span>
-              {('0' + (Math.floor(sessionLength / minute) % 60)).slice(-2)}:
+              {('0' + (Math.floor(state.sessionLength / minute) % 60)).slice(
+                -2
+              )}
+              :
             </span>
             <span>
-              {('0' + (Math.floor(sessionLength / 1000) % 60)).slice(-2)}
+              {('0' + (Math.floor(state.sessionLength / 1000) % 60)).slice(-2)}
             </span>
             <button
               className='breakSessionButtons'
