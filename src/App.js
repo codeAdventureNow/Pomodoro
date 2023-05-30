@@ -69,7 +69,7 @@ function reducer(state, action) {
     case DECREMENT_TIME:
       return {
         ...state,
-        time: action.payload,
+        time: state.time - 1000,
       };
     default:
       return state;
@@ -172,17 +172,14 @@ function App() {
     }
   }
 
-  //TODO How do I work with useEffect in conjunction with a reducer?
   useEffect(() => {
     let interval;
     if (state.timeStart) {
       interval = setInterval(() => {
-        // dispatch({
-        //   type: DECREMENT_TIME,
-        //   payload: state.time - 10,
-        // });
-        // setTime((prevTime) => prevTime - 10);
-      }, 10);
+        dispatch({
+          type: DECREMENT_TIME,
+        });
+      }, 1000);
     } else if (!state.timeStart) {
       clearInterval(interval);
     }
