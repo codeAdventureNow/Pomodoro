@@ -27,6 +27,7 @@ function reducer(state, action) {
       return {
         ...state,
         onBreak: false,
+        tally: state.tally - 1,
         time: state.sessionLength,
       };
     case RESET_SESSION_AND_BREAK:
@@ -76,20 +77,11 @@ function reducer(state, action) {
 }
 
 function App() {
-  // const [time, setTime] = useState(minute * 25);
-  // const [timeStart, setTimeStart] = useState(false);
-  // const [sessionLength, setSessionLength] = useState(minute * 25);
-  // const [breakLength, setBreakLength] = useState(minute * 5);
-  // const [onBreak, setOnBreak] = useState(false);
-  // const [tally, setTally] = useState(0);
-
   const [state, dispatch] = useReducer(reducer, {
-    // time: minute * 25,
-    time: 10000,
+    time: minute * 25,
     timeStart: false,
     sessionLength: minute * 25,
-    // breakLength: minute * 5,
-    breakLength: 10000,
+    breakLength: minute * 5,
     onBreak: false,
     tally: 0,
   });
@@ -101,9 +93,6 @@ function App() {
   useEffect(() => {
     if (state.time === 0) {
       playAudioAlert();
-      // setOnBreak(true);
-      // setTally(state.tally + 1);
-      // setTime(state.breakLength);
       dispatch({
         type: SET_BREAK,
       });
@@ -113,9 +102,6 @@ function App() {
   useEffect(() => {
     if (state.time === 0 && state.onBreak) {
       playAudioAlert();
-      // setOnBreak(false);
-      // setTally(state.tally);
-      // setTime(state.sessionLength);
       dispatch({
         type: START_NEW_SESSION,
       });
@@ -123,9 +109,6 @@ function App() {
   }, [state.time, state.onBreak]);
 
   function resetToDefault() {
-    // setTime(minute * 25);
-    // setSessionLength(minute * 25);
-    // setBreakLength(minute * 5);
     dispatch({
       type: RESET_SESSION_AND_BREAK,
     });
@@ -138,8 +121,6 @@ function App() {
       dispatch({
         type: INCREMENT_SESSION_LENGTH,
       });
-      // setSessionLength(state.sessionLength + minute);
-      // setTime(state.time + minute);
     }
   }
 
@@ -150,8 +131,6 @@ function App() {
       dispatch({
         type: DECREMENT_SESSION_LENGTH,
       });
-      // setSessionLength(state.sessionLength - minute);
-      // setTime(state.time - minute);
     }
   }
 
@@ -159,7 +138,6 @@ function App() {
     if (state.breakLength <= minute) {
       return;
     } else {
-      // setBreakLength(state.breakLength - minute);
       dispatch({
         type: DECREMENT_BREAK_LENGTH,
       });
@@ -170,7 +148,6 @@ function App() {
     if (state.breakLength >= minute * 59) {
       return state.breakLength === minute * 59;
     } else {
-      // setBreakLength(state.breakLength + minute);
       dispatch({
         type: INCREMENT_BREAK_LENGTH,
       });
