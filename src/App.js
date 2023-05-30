@@ -85,10 +85,12 @@ function App() {
   // const [tally, setTally] = useState(0);
 
   const [state, dispatch] = useReducer(reducer, {
-    time: minute * 25,
+    // time: minute * 25,
+    time: 3000,
     timeStart: false,
     sessionLength: minute * 25,
-    breakLength: minute * 5,
+    // breakLength: minute * 5,
+    breakLength: 3000,
     onBreak: false,
     tally: 0,
   });
@@ -97,25 +99,29 @@ function App() {
     new Audio(sound).play();
   }
 
-  if (state.time === 0) {
-    playAudioAlert();
-    // setOnBreak(true);
-    // setTally(state.tally + 1);
-    // setTime(state.breakLength);
-    dispatch({
-      type: SET_BREAK,
-    });
-  }
+  useEffect(() => {
+    if (state.time === 0) {
+      playAudioAlert();
+      // setOnBreak(true);
+      // setTally(state.tally + 1);
+      // setTime(state.breakLength);
+      dispatch({
+        type: SET_BREAK,
+      });
+    }
+  }, [state.time]);
 
-  if (state.time === 0 && state.onBreak) {
-    playAudioAlert();
-    // setOnBreak(false);
-    // setTally(state.tally);
-    // setTime(state.sessionLength);
-    dispatch({
-      type: START_NEW_SESSION,
-    });
-  }
+  useEffect(() => {
+    if (state.time === 0 && state.onBreak) {
+      playAudioAlert();
+      // setOnBreak(false);
+      // setTally(state.tally);
+      // setTime(state.sessionLength);
+      dispatch({
+        type: START_NEW_SESSION,
+      });
+    }
+  }, [state.time, state.onBreak]);
 
   function resetToDefault() {
     // setTime(minute * 25);
