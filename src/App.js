@@ -20,14 +20,14 @@ function reducer(state, action) {
       return {
         ...state,
         onBreak: true,
-        tally: state.tally + 1,
+        sessionTally: state.sessionTally + 1,
         time: state.breakLength,
       };
     case START_NEW_SESSION:
       return {
         ...state,
         onBreak: false,
-        tally: state.tally - 1,
+        sessionTally: state.sessionTally - 1,
         time: state.sessionLength,
       };
     case RESET_SESSION_AND_BREAK:
@@ -83,7 +83,7 @@ function App() {
     sessionLength: minute * 25,
     breakLength: minute * 5,
     onBreak: false,
-    tally: 0,
+    sessionTally: 0,
   });
 
   function playAudioAlert() {
@@ -195,7 +195,7 @@ function App() {
         </div>
         <h4 className='tally-heading'>Tally</h4>
         <div className='tally'>
-          <p>{state.tally}</p>
+          <p>{state.sessionTally}</p>
         </div>
         <div className='startPauseReset'>
           <button
